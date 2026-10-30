@@ -1,24 +1,24 @@
 # Phishing Email Detection System
 
-A machine learning-based cybersecurity project that identifies potentially malicious phishing emails using Natural Language Processing (NLP) and supervised machine learning.
+A machine learning-based cybersecurity project that detects potentially malicious phishing emails using Natural Language Processing (NLP) and supervised machine learning.
 
 ## Project Overview
 
-Phishing emails are commonly used by attackers to steal sensitive information, distribute malicious links, and compromise user accounts.
+Phishing attacks are commonly used to steal sensitive information, distribute malicious links, and compromise user accounts.
 
-This project implements a phishing email detection system that analyzes email text and classifies messages as either legitimate (safe) or phishing.
+This project implements a phishing email detection system that analyzes email text and classifies messages into two categories: **Safe** and **Phishing**.
 
-The system uses TF-IDF feature extraction and Logistic Regression for classification, with a Streamlit dashboard providing an interactive interface.
+The system uses TF-IDF (Term Frequency-Inverse Document Frequency) for text feature extraction and Logistic Regression for classification. A Streamlit dashboard provides an interactive interface for submitting and analysing email messages.
 
 ## Features
 
 - Email text classification.
 - Natural Language Processing using TF-IDF.
-- Logistic Regression machine learning model.
+- Logistic Regression classification model.
 - Detection of safe and phishing emails.
 - Interactive Streamlit dashboard.
+- Individual email prediction functionality.
 - Model training and evaluation scripts.
-- Prediction functionality for individual email messages.
 
 ## Technologies Used
 
@@ -33,11 +33,13 @@ The system uses TF-IDF feature extraction and Logistic Regression for classifica
 
 ## System Architecture
 
-1. Email text is submitted through the dashboard.
-2. The trained TF-IDF vectorizer transforms the text into numerical features.
-3. The Logistic Regression classifier analyzes the extracted features.
+The detection process follows these steps:
+
+1. The user submits email text through the Streamlit dashboard.
+2. The trained TF-IDF vectorizer transforms the email text into numerical features.
+3. The Logistic Regression classifier analyses the extracted features.
 4. The system predicts whether the email is safe or phishing.
-5. The dashboard displays the prediction.
+5. The dashboard displays the classification result.
 
 ## Project Structure
 
@@ -55,42 +57,46 @@ phishing-email-detection-system/
 └── .gitignore
 ```
 
-The trained model is included only if it is available in the repository.
+The repository includes the trained machine learning model. Dataset files and the Python virtual environment are excluded.
 
 ## Installation
 
-Clone the repository:
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/phishing-email-detection-system.git
+git clone https://github.com/Manuel-astro/phishing-email-detection-system.git
 cd phishing-email-detection-system
 ```
 
-Create a virtual environment:
+### 2. Create a virtual environment
 
 ```bash
 python -m venv .venv
 ```
 
-Activate it on Windows:
+### 3. Activate the virtual environment
+
+For Windows:
 
 ```bash
 .venv\Scripts\activate
 ```
 
-Install dependencies:
+### 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Run the Application
+## Running the Application
+
+Start the Streamlit application:
 
 ```bash
 python -m streamlit run app.py
 ```
 
-Open the local address displayed in your terminal, normally:
+Open the local address displayed in your terminal. The default address is:
 
 ```text
 http://localhost:8501
@@ -98,23 +104,23 @@ http://localhost:8501
 
 ## Model Development
 
-The model uses:
+The machine learning pipeline uses:
 
 - TF-IDF with unigram and bigram features.
-- Logistic Regression.
+- Logistic Regression classification.
 - Class balancing.
 - Stratified train-test splitting.
-- Classification metrics for model evaluation.
+- Classification metrics for performance evaluation.
 
-The initial internal test produced an accuracy of approximately 98.37% on a held-out split from the original dataset.
+The initial internal evaluation produced an accuracy of approximately **98.37%** on a held-out test set from the original dataset.
 
-This result is an internal evaluation, not evidence of equivalent performance on unseen real-world email sources.
+This result represents internal test performance and should not be interpreted as proof of equivalent accuracy on independent real-world email sources.
 
 ## Evaluation
 
-The project includes an evaluation script for testing the trained model against a separate dataset.
+The project includes an evaluation script for assessing the trained model.
 
-Evaluation metrics include:
+The evaluation process considers:
 
 - Accuracy
 - Precision
@@ -122,30 +128,33 @@ Evaluation metrics include:
 - F1-score
 - Confusion matrix
 
-Independent evaluation and dataset overlap checks are ongoing.
+Independent validation and dataset overlap checks remain areas for further investigation.
 
 ## Limitations
 
-- The current model primarily analyzes email text.
-- It does not yet perform comprehensive URL reputation checks.
-- It does not yet inspect full email headers.
+- The current model primarily analyses email text.
+- Comprehensive URL reputation checks are not yet implemented.
+- Full email-header inspection is not yet supported.
+- Suspicious attachment analysis is not yet implemented.
 - Performance may vary across different email datasets.
 - A phishing prediction should not be treated as definitive proof that an email is malicious.
 
 ## Future Improvements
 
-- URL and domain analysis.
+- URL and domain reputation analysis.
 - Email-header inspection.
-- Detection of suspicious attachments.
+- Suspicious attachment detection.
 - Evaluation using more diverse independent datasets.
-- Improved model generalization.
-- Additional machine learning approaches.
+- Improved model generalisation.
+- Exploration of additional machine learning algorithms.
 
 ## Author
 
-Manuel-astro
+**Manuel Quaye**
 
 Cybersecurity | IT Security | Machine Learning
+
+GitHub: [@Manuel-astro](https://github.com/Manuel-astro)
 
 ## Disclaimer
 
