@@ -1,4 +1,6 @@
 
+from pathlib import Path
+
 import pandas as pd
 import joblib
 
@@ -12,35 +14,59 @@ from sklearn.metrics import (
     confusion_matrix,
 )
 
-DATASET_PATH = "Phishing_Email.csv"
-MODEL_PATH = "phishing_model.joblib"
+BASE_DIR = Path(__file__).resolve().parent
+
+DATASET_PATH = BASE_DIR / "Phishing_Email.csv"
+MODEL_PATH = BASE_DIR / "phishing_model.joblib"
 
 print("Loading email dataset...")
 
+if not DATASET_PATH.is_file():
+    raise FileNotFoundError(
+        f"Dataset not found: {DATASET_PATH}"
+    )
+
 df = pd.read_csv(DATASET_PATH)
 
-# Keep the email text and its original label.
-df = df[["Email Text", "Email Type"]].copy()
-df = df.dropna(subset=["Email Text", "Email Type"])
+required_columns = ["Email Text", "Email Type"]
+
+if not all(column in df.columns for column in required_columns):
+    raise ValueError(
+        f"Dataset must contain these columns: {required_columns}"
+    )
+
+df = df[required_columns].copy()
+
+df = df.dropna(subset=required_columns)
 
 df["Email Text"] = df["Email Text"].astype(str).str.strip()
 df["Email Type"] = df["Email Type"].astype(str).str.strip()
 
 df = df[df["Email Text"] != ""]
 
-# Convert dataset labels to consistent names.
 label_map = {
     "Safe Email": "safe",
     "Phishing Email": "phishing",
 }
 
 df["label"] = df["Email Type"].map(label_map)
+
 df = df.dropna(subset=["label"])
 
-# Remove exact duplicate email texts before splitting.
 df = df.drop_duplicates(subset=["Email Text"])
 
+if df["label"].nunique() != 2:
+    raise ValueError(
+        "The dataset must contain both safe and phishing emails."
+    )
+
+if df["label"].value_counts().min() < 2:
+    raise ValueError(
+        "Each class must contain at least two examples."
+    )
+
 print(f"Usable unique emails: {len(df)}")
+
 print("\nClass distribution:")
 print(df["label"].value_counts())
 
@@ -87,9 +113,11 @@ model.fit(X_train, y_train)
 predictions = model.predict(X_test)
 
 print("\n===== MODEL EVALUATION =====")
+
 print(f"Accuracy: {accuracy_score(y_test, predictions):.4f}")
 
 print("\nClassification report:")
+
 print(
     classification_report(
         y_test,
@@ -102,11 +130,14 @@ print(
 
 print("Confusion matrix (rows = actual, columns = predicted):")
 print("Order: Safe Email, Phishing Email")
-print(confusion_matrix(
-    y_test,
-    predictions,
-    labels=["safe", "phishing"],
-))
+
+print(
+    confusion_matrix(
+        y_test,
+        predictions,
+        labels=["safe", "phishing"],
+    )
+)
 
 joblib.dump(model, MODEL_PATH)
 

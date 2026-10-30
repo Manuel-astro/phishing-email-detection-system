@@ -15,12 +15,19 @@ SUSPICIOUS_PHRASES = [
 
 URL_PATTERN = re.compile(
     r"https?://\S+|www\.\S+",
-    re.IGNORECASE
+    re.IGNORECASE,
 )
 
 
 def detect_phishing(email_text):
+    if not isinstance(email_text, str):
+        raise TypeError("Email text must be a string.")
+
+    if not email_text.strip():
+        return "No email text provided", []
+
     text = email_text.lower()
+
     reasons = []
     score = 0
 
@@ -33,7 +40,9 @@ def detect_phishing(email_text):
 
     if urls:
         score += 1
-        reasons.append(f"Contains {len(urls)} URL(s) for review")
+        reasons.append(
+            f"Contains {len(urls)} URL(s) for review"
+        )
 
     if score >= 2:
         verdict = "Potential phishing"
@@ -62,9 +71,7 @@ if __name__ == "__main__":
 
     email = "\n".join(lines)
 
-    if not email.strip():
-        print("No email text provided.")
-    else:
+    try:
         verdict, reasons = detect_phishing(email)
 
         print(f"\nResult: {verdict}")
@@ -80,3 +87,6 @@ if __name__ == "__main__":
             "\nNote: This rule-based result "
             "is not a security guarantee."
         )
+
+    except TypeError as error:
+        print(f"Input error: {error}")
